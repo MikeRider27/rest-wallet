@@ -32,5 +32,18 @@ class CompraController extends Controller
         return response()->json($response);
     }
 
-   
+    public function confirmarCompra(Request $request)
+    {
+        $data = $request->validate([
+            'sessionId' => 'required|string',
+            'token' => 'required|string',
+        ]);
+
+        $response = $this->soapClient->call('confirmarPago', [
+            $data['sessionId'],
+            $data['token'],
+        ]);
+
+        return response()->json($response);
+    }
 }
