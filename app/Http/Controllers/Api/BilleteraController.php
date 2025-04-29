@@ -32,5 +32,18 @@ class BilleteraController extends Controller
         return response()->json($response);
     }
 
-   
+    public function consultarSaldo(Request $request)
+    {
+        $data = $request->validate([
+            'documento' => 'required|string',
+            'celular' => 'required|string',
+        ]);
+
+        $response = $this->soapClient->call('consultarSaldo', [
+            $data['documento'],
+            $data['celular'],
+        ]);
+
+        return response()->json($response);
+    }
 }
