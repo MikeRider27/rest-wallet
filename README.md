@@ -66,3 +66,17 @@ Todos los endpoints se conectan internamente al servicio SOAP.
 - Manejo de errores con estructura estándar `{ codigo, mensaje, data }`.
 - Separación de responsabilidades.
 - Uso de Laravel Sail para portabilidad.
+
+---
+
+## 🧑‍💻 Autor
+
+**Miguel Villalba**  
+Backend Developer - Prueba Técnica ePayco  
+✉️ mike.mavc27@gmail.com
+
+---
+
+## 📄 Licencia
+
+Este proyecto está bajo licencia MIT.
