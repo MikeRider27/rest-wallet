@@ -12,7 +12,7 @@ Este proyecto es el **puente REST** que consume el **servicio SOAP** de la bille
 
 ```bash
 # Clona el repositorio
-git clone https://github.com/tuusuario/rest-wallet.git
+git clone https://github.com/MikeRider27/rest-wallet.git
 cd rest-wallet
 
 # Copia el archivo .env de ejemplo
