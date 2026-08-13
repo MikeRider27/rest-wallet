@@ -3,19 +3,17 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Services\SoapClientService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use App\Services\SoapClientService; // Asegúrate de que la ruta sea correcta
 
 class BilleteraController extends Controller
 {
-    protected $soapClient;
-
-    public function __construct()
+    public function __construct(private readonly SoapClientService $soapClient)
     {
-        $this->soapClient = new SoapClientService();
     }
 
-    public function recargar(Request $request)
+    public function recargar(Request $request): JsonResponse
     {
         $data = $request->validate([
             'documento' => 'required|string',
@@ -23,27 +21,23 @@ class BilleteraController extends Controller
             'monto' => 'required|numeric',
         ]);
 
-        $response = $this->soapClient->call('recargarBilletera', [
+        return $this->forwardToSoap($this->soapClient, 'recargarBilletera', [
             $data['documento'],
             $data['celular'],
             $data['monto'],
         ]);
-
-        return response()->json($response);
     }
 
-    public function consultarSaldo(Request $request)
+    public function consultarSaldo(Request $request): JsonResponse
     {
         $data = $request->validate([
             'documento' => 'required|string',
             'celular' => 'required|string',
         ]);
 
-        $response = $this->soapClient->call('consultarSaldo', [
+        return $this->forwardToSoap($this->soapClient, 'consultarSaldo', [
             $data['documento'],
             $data['celular'],
         ]);
-
-        return response()->json($response);
     }
 }

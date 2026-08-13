@@ -35,4 +35,10 @@ return [
         ],
     ],
 
+    'soap' => [
+        'location' => env('SOAP_SERVER_URL', 'http://host.docker.internal:9002/soap/server'),
+        'api_key' => env('SOAP_API_KEY'),
+        'timeout' => env('SOAP_TIMEOUT', 10),
+    ],
+
 ];

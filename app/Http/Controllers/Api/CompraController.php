@@ -4,18 +4,16 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Services\SoapClientService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class CompraController extends Controller
 {
-    protected $soapClient;
-
-    public function __construct()
+    public function __construct(private readonly SoapClientService $soapClient)
     {
-        $this->soapClient = new SoapClientService();
     }
 
-    public function generarCompra(Request $request)
+    public function generarCompra(Request $request): JsonResponse
     {
         $data = $request->validate([
             'documento' => 'required|string',
@@ -23,27 +21,23 @@ class CompraController extends Controller
             'montoCompra' => 'required|numeric',
         ]);
 
-        $response = $this->soapClient->call('generarCompra', [
+        return $this->forwardToSoap($this->soapClient, 'generarCompra', [
             $data['documento'],
             $data['celular'],
             $data['montoCompra'],
         ]);
-
-        return response()->json($response);
     }
 
-    public function confirmarCompra(Request $request)
+    public function confirmarCompra(Request $request): JsonResponse
     {
         $data = $request->validate([
             'sessionId' => 'required|string',
             'token' => 'required|string',
         ]);
 
-        $response = $this->soapClient->call('confirmarPago', [
+        return $this->forwardToSoap($this->soapClient, 'confirmarPago', [
             $data['sessionId'],
             $data['token'],
         ]);
-
-        return response()->json($response);
     }
 }

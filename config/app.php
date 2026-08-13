@@ -163,8 +163,6 @@ return [
          * Application Service Providers...
          */
         App\Providers\AppServiceProvider::class,
- 
-        App\Providers\RouteServiceProvider::class, // <<--- Agregado para tus rutas
     ],
 
 ];
