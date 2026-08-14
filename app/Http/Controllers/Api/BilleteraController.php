@@ -16,28 +16,19 @@ class BilleteraController extends Controller
     public function recargar(Request $request): JsonResponse
     {
         $data = $request->validate([
-            'documento' => 'required|string',
-            'celular' => 'required|string',
             'monto' => 'required|numeric',
         ]);
 
         return $this->forwardToSoap($this->soapClient, 'recargarBilletera', [
-            $data['documento'],
-            $data['celular'],
+            $request->bearerToken(),
             $data['monto'],
         ]);
     }
 
     public function consultarSaldo(Request $request): JsonResponse
     {
-        $data = $request->validate([
-            'documento' => 'required|string',
-            'celular' => 'required|string',
-        ]);
-
         return $this->forwardToSoap($this->soapClient, 'consultarSaldo', [
-            $data['documento'],
-            $data['celular'],
+            $request->bearerToken(),
         ]);
     }
 }

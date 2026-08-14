@@ -16,14 +16,11 @@ class CompraController extends Controller
     public function generarCompra(Request $request): JsonResponse
     {
         $data = $request->validate([
-            'documento' => 'required|string',
-            'celular' => 'required|string',
             'montoCompra' => 'required|numeric',
         ]);
 
         return $this->forwardToSoap($this->soapClient, 'generarCompra', [
-            $data['documento'],
-            $data['celular'],
+            $request->bearerToken(),
             $data['montoCompra'],
         ]);
     }
@@ -36,6 +33,7 @@ class CompraController extends Controller
         ]);
 
         return $this->forwardToSoap($this->soapClient, 'confirmarPago', [
+            $request->bearerToken(),
             $data['sessionId'],
             $data['token'],
         ]);

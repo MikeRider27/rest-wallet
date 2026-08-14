@@ -7,27 +7,21 @@ use App\Services\SoapClientService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
-class ClienteController extends Controller
+class AuthController extends Controller
 {
     public function __construct(private readonly SoapClientService $soapClient)
     {
     }
 
-    public function registro(Request $request): JsonResponse
+    public function login(Request $request): JsonResponse
     {
         $data = $request->validate([
             'documento' => 'required|string',
-            'nombre' => 'required|string',
-            'email' => 'required|email',
-            'celular' => 'required|string',
-            'password' => 'required|string|min:6',
+            'password' => 'required|string',
         ]);
 
-        return $this->forwardToSoap($this->soapClient, 'registroCliente', [
+        return $this->forwardToSoap($this->soapClient, 'login', [
             $data['documento'],
-            $data['nombre'],
-            $data['email'],
-            $data['celular'],
             $data['password'],
         ]);
     }

@@ -69,11 +69,19 @@ FRONTEND_URL=http://localhost:3000
 
 ## 📡 Endpoints REST Disponibles
 
-- `POST /api/registro-cliente`
-- `POST /api/recargar-billetera`
-- `POST /api/consultar-saldo`
-- `POST /api/generar-compra`
-- `POST /api/confirmar-compra`
+Públicos:
+
+- `POST /api/registro-cliente` — ahora requiere `password` (mínimo 6 caracteres) además de `documento`/`nombre`/`email`/`celular`.
+- `POST /api/login` — `{ documento, password }` → `{ codigo, mensaje, data: { token, documento, nombre, celular } }`.
+
+Protegidos (requieren header `Authorization: Bearer <token>`, el que devuelve `/api/login`):
+
+- `POST /api/recargar-billetera` — `{ monto }`
+- `POST /api/consultar-saldo` — sin body
+- `POST /api/generar-compra` — `{ montoCompra }`
+- `POST /api/confirmar-compra` — `{ sessionId, token }` (`token` acá es el código OTP de 6 dígitos de la compra, no el token de sesión)
+
+Sin el header `Authorization`, los endpoints protegidos devuelven `401` con `{codigo: '99', mensaje: 'No autenticado', data: null}` — este chequeo es solo de presencia; la validez real del token la resuelve `soap-wallet` (rest-wallet sigue sin base de datos propia).
 
 Todos devuelven el mismo contrato `{codigo, mensaje, data}` que expone `soap-wallet`. Si el servicio SOAP no responde, el endpoint devuelve `502` con `{codigo: '99', mensaje: '...', data: null}`.
 
@@ -87,7 +95,8 @@ Todos devuelven el mismo contrato `{codigo, mensaje, data}` que expone `soap-wal
 
 ## 📁 Estructura del Proyecto
 
-- `app/Http/Controllers/Api`: Controllers que reciben las solicitudes REST y llaman al servicio SOAP vía `forwardToSoap()` (definido en `app/Http/Controllers/Controller.php`).
+- `app/Http/Controllers/Api`: Controllers que reciben las solicitudes REST y llaman al servicio SOAP vía `forwardToSoap()` (definido en `app/Http/Controllers/Controller.php`). Incluye `AuthController` (login).
+- `app/Http/Middleware/RequireBearerToken.php`: exige el header `Authorization: Bearer` en los endpoints protegidos.
 - `app/Services/SoapClientService.php`: Cliente SOAP centralizado (auth, timeout, logging).
 - `app/Exceptions/SoapGatewayException.php`: excepción uniforme para cualquier falla de comunicación con `soap-wallet`.
 - `config/cors.php`: habilita CORS solo para `FRONTEND_URL`.
